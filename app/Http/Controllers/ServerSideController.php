@@ -9,15 +9,26 @@ class ServerSideController extends Controller
 {
     //
 
+    
+
     function getSampleData(Request $request)
     {
+        function check($value){
+            if($value == 'true') {
+                return 'checked';
+            } else {
+                return '';
+            }
+        }
+
         $totalFilteredRecord = $totalDataRecord = $draw_val = "";
         $columns_list = array(
             0 => 'id',
             1 => 'first_name',
             2 => 'last_name',
             3 => 'gender',
-            4 => 'action'
+            4 => 'checkmark',
+            5 => 'action'
         );
         
         $totalDataRecord = Sample::count();
@@ -33,7 +44,7 @@ class ServerSideController extends Controller
         {
         $post_data = Sample::offset($start_val)
         ->limit($limit_val)
-        ->orderBy($order,$dir_val)
+        ->orderBy($order_val,$dir_val)
         ->get();
         }
         else {
@@ -44,13 +55,13 @@ class ServerSideController extends Controller
         ->orWhere('last_name', 'LIKE',"%{$search_text}%")
         ->offset($start_val)
         ->limit($limit_val)
-        ->orderBy($order,$dir_val)
+        ->orderBy($order_val,$dir_val)
         ->get();
         
         $totalFilteredRecord = Sample::where('id','LIKE',"%{$search_text}%")
-        ->orWhere('first_name', 'LIKE',"%{$search_text}%")
-        ->orWhere('last_name', 'LIKE',"%{$search_text}%")
-        ->count();
+            ->orWhere('first_name', 'LIKE',"%{$search_text}%")
+            ->orWhere('last_name', 'LIKE',"%{$search_text}%")
+            ->count();
         }
         
         $data_val = array();
@@ -61,10 +72,15 @@ class ServerSideController extends Controller
             // $datashow =  route('posts_table.show',$post_val->id);
             // $dataedit =  route('posts_table.edit',$post_val->id);
             
+            $checkmark = check($post_val->checkmark);
+
+
+            
             $postnestedData['id'] = $post_val->id;
             $postnestedData['first_name'] = $post_val->first_name;
-            $postnestedData['last_name'] = substr(strip_tags($post_val->last_name),0,50).".....";
+            $postnestedData['last_name'] = $post_val->last_name;
             $postnestedData['gender'] = $post_val->gender;
+            $postnestedData['checkmark'] =  $post_val->checkmark;
             $postnestedData['action'] = "dfd";
             $data_val[] = $postnestedData;
             

@@ -24,6 +24,7 @@
          <th>First Name</th>
          <th>Last Name</th>
          <th>Gender</th>
+         <th>Checkmark</th>
          <th>Action</th>
         </tr>
        </thead>
@@ -62,35 +63,42 @@ $(document).ready(function(){
                 { "data": "first_name" },
                 { "data": "last_name" },
                 { "data": "gender" },
+                { "data": "checkmark" },
                 { 
                     "data": "action",
                     "searchable": false,
                     "orderable": false
                 }
             ]
+    }); 
+
+
+
+    $('#sample_data').on('draw.dt', function(){
+        $('#sample_data').Tabledit({
+            url:'{{ route("tabledit.action") }}',
+            dataType:'json',
+            columns:{
+                identifier : [0, 'id'],
+                editable:
+                [
+                    [1, 'first_name'], 
+                    [2, 'last_name'], 
+                    [3, 'gender', '{"1":"Male","2":"Female"}'],
+                    [4, 'checkmark', '{"1":"true","2":"false"}']
+                ]
+            },
+            restoreButton:false,
+            onSuccess:function(data, textStatus, jqXHR)
+            {
+                if(data.action == 'delete')
+                {
+                $('#' + data.id).remove();
+                $('#sample_data').DataTable().ajax.reload();
+                }
+            }
+        });
     });
-
-
-
-    // $('#sample_data').on('draw.dt', function(){
-    //     $('#sample_data').Tabledit({
-    //         url:'action.php',
-    //         dataType:'json',
-    //         columns:{
-    //             identifier : [0, 'id'],
-    //             editable:[[1, 'first_name'], [2, 'last_name'], [3, 'gender', '{"1":"Male","2":"Female"}']]
-    //         },
-    //         restoreButton:false,
-    //         onSuccess:function(data, textStatus, jqXHR)
-    //         {
-    //             if(data.action == 'delete')
-    //             {
-    //             $('#' + data.id).remove();
-    //             $('#sample_data').DataTable().ajax.reload();
-    //             }
-    //         }
-    //     });
-    // });
   
 }); 
 </script>
