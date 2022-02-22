@@ -25,7 +25,8 @@ Route::get('/', function () {
 Route::post('/sample-get-data', [ServerSideController::class, 'getSampleData'])->name('sample-get-data');;
 
 Route::get('/sample-view', [SampleController::class, 'index']);
-Route::get('/sample-view-action', [SampleController::class, 'action'])->name('tabledit.action');;
+Route::get('/sample-view-action', [SampleController::class, 'action'])->name('tabledit.action');
+Route::post('/sample-view-update', [SampleController::class, 'update_data'])->name('tabledit.update');
 
 Route::get('/livetable', [LiveTable::class, 'index']);
 Route::get('/livetable/fetch_data', [LiveTable::class, 'fetch_data']);
