@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LiveTable;
 use App\Http\Controllers\SampleController;
 use App\Http\Controllers\ServerSideController;
+use App\Http\Controllers\UserPrivelegeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,11 @@ Route::get('/', function () {
 
 
 
-Route::post('/sample-get-data', [ServerSideController::class, 'getSampleData'])->name('sample-get-data');;
+Route::post('/sample-get-data', [ServerSideController::class, 'getSampleData'])->name('sample-get-data');
+Route::post('/userprivelege-get-data', [ServerSideController::class, 'getUserPrivelegeData'])->name('userprivelege-get-data');
+
+Route::get('/userprivelege-view', [UserPrivelegeController::class, 'index']);
+Route::post('/userprivelege-update', [UserPrivelegeController::class, 'updateUserPrivelege'])->name('userprivelege-update');
 
 Route::get('/sample-view', [SampleController::class, 'index']);
 Route::get('/sample-view-action', [SampleController::class, 'action'])->name('tabledit.action');
