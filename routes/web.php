@@ -38,3 +38,7 @@ Route::get('/livetable/fetch_data', [LiveTable::class, 'fetch_data']);
 Route::post('/livetable/add_data', [LiveTable::class, 'add_data'])->name('livetable.add_data');
 Route::post('/livetable/update_data', [LiveTable::class, 'update_data'])->name('livetable.update_data');
 Route::post('/livetable/delete_data', [LiveTable::class, 'delete_data'])->name('livetable.delete_data');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

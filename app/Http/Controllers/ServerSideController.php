@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Sample;
 use App\Models\UserPrivelege;
+use DB;
 
 class ServerSideController extends Controller
 {
@@ -26,11 +27,19 @@ class ServerSideController extends Controller
 
         $totalFilteredRecord = $totalDataRecord = $draw_val = "";
         $columns_list = array(
-            0 => 'id',
-            1 => 'user_id',
+            0 => 'users.id',
+            1 => 'users.username',
         );
         
-        $totalDataRecord = UserPrivelege::count();
+        $totalDataRecord = DB::table('user_priveleges')
+        ->join('users', 'user_priveleges.user_id', '=', 'users.id')
+        ->join('user_infos', 'user_infos.user_id', '=', 'users.id')
+        ->whereIN('user_infos.designation', ['booking'])
+        ->where('user_infos.status', '!=', '2')
+        ->count();
+
+        
+        
         
         $totalFilteredRecord = $totalDataRecord;
         
@@ -41,7 +50,10 @@ class ServerSideController extends Controller
         
         if(empty($request->input('search.value')))
         {
-        $post_data = UserPrivelege::offset($start_val)
+        $post_data = DB::table('user_priveleges')
+        ->join('users', 'user_priveleges.user_id', '=', 'users.id')
+        ->join('user_infos', 'user_infos.user_id', '=', 'users.id')
+        ->whereIN('user_infos.designation', ['booking'])->offset($start_val)
         ->limit($limit_val)
         ->orderBy($order_val,$dir_val)
         ->get();
@@ -49,13 +61,19 @@ class ServerSideController extends Controller
         else {
         $search_text = $request->input('search.value');
         
-        $post_data =  UserPrivelege::where('id','LIKE',"%{$search_text}%")
+        $post_data =  DB::table('user_priveleges')
+        ->join('users', 'user_priveleges.user_id', '=', 'users.id')
+        ->join('user_infos', 'user_infos.user_id', '=', 'users.id')
+        ->whereIN('user_infos.designation', ['booking'])->where('users.id','LIKE',"%{$search_text}%")
         ->offset($start_val)
         ->limit($limit_val)
         ->orderBy($order_val,$dir_val)
         ->get();
         
-        $totalFilteredRecord = UserPrivelege::where('id','LIKE',"%{$search_text}%")
+        $totalFilteredRecord = DB::table('user_priveleges')
+        ->join('users', 'user_priveleges.user_id', '=', 'users.id')
+        ->join('user_infos', 'user_infos.user_id', '=', 'users.id')
+        ->whereIN('user_infos.designation', ['booking'])->where('users.id','LIKE',"%{$search_text}%")
             ->count();
         }
         
@@ -71,8 +89,8 @@ class ServerSideController extends Controller
 
 
             
-            $postnestedData['id'] = $post_val->id;
             $postnestedData['user_id'] = $post_val->user_id;
+            $postnestedData['username'] = $post_val->username;
             $postnestedData['summary'] = check($post_val->summary, 'summary');
             $postnestedData['view_list'] = check($post_val->view_list, 'view_list');
             $postnestedData['edit_list'] = check($post_val->edit_list, 'edit_list');
@@ -97,17 +115,20 @@ class ServerSideController extends Controller
             $postnestedData['user'] = check($post_val->user, 'user');
             $postnestedData['inspector'] = check($post_val->inspector, 'inspector');
             $postnestedData['sales'] = check($post_val->sales, 'sales');
-            $postnestedData['action'] = $post_val['summary'];
+            $postnestedData['action'] = $post_val->summary;
+
+            
             $data_val[] = $postnestedData;
             
             }
         }
+
         $draw_val = $request->input('draw');
         $get_json_data = array(
         "draw"            => intval($draw_val),
         "recordsTotal"    => intval($totalDataRecord),
         "recordsFiltered" => intval($totalFilteredRecord),
-        "data"            => $data_val
+        "data"            => $data_val,
         );
         
         echo json_encode($get_json_data);

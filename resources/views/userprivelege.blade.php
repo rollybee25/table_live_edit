@@ -26,14 +26,12 @@
     </style>
 </head>
  <body>
-  <div class="container">
-   <h3 align="center">How to use Tabledit plugin with jQuery Datatable in PHP Ajax</h3>
+  <div class="">
    <br />
    <div class="panel panel-default">
-    <div class="panel-heading">Sample Data</div>
     <div class="panel-body">
      <div class="table-responsive">
-      <table id="sample_data" class="table table-bordered table-striped">
+      <table id="sample_data" class="table table-bordered table-striped" style="width:100%; padding:10px ">
        <thead>
         <tr>
             <th colspan="2">User</th>
@@ -100,13 +98,14 @@ $(document).ready(function(){
             "scrollCollapse": true,
             "fixedColumns":   {
                 "left": 1,
-                "right": 1
+                "left": 0,
             },
             "order": [
-                    [0, "asc"]
+                    [1, "asc"]
             ],
             "processing" : true,
             "serverSide" : true,
+            "stateSave": true,
             "ajax" : {
                 url:"{{ url('userprivelege-get-data') }}",
                 type:"POST",
@@ -115,8 +114,8 @@ $(document).ready(function(){
                 }
             },
             "columns": [
-                { "data": "id" },
                 { "data": "user_id" },
+                { "data": "username" },
                 { 
                     "data": "summary", 
                     "orderable": false
@@ -228,7 +227,7 @@ $(document).ready(function(){
         var column_name = $(this).attr("id");
         var column_value = $(this)[0].checked === true?'Yes':'No';
         // var titles = $( myTable.column( myTable.cell( this ).index().column ).header() ).html();
-        var id = $(this).closest('tr').find("td:eq(1)").html(); 
+        var id = $(this).closest('tr').find("td:eq(0)").html(); 
         // console.log(column_name);
 
         // tabledit.update
