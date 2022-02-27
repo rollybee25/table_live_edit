@@ -21,6 +21,11 @@ class ServerSideController extends Controller
             return '<input type="checkbox" class="column_name"'.$is_checked.' id="'.$name.'" />';
         }
 
+        function editButton($id){
+            return '<span id="'.$id.'"><i class="fas fa fa-edit fa-lg"></i></span>';
+        }
+        
+
         
         
         
@@ -89,7 +94,7 @@ class ServerSideController extends Controller
 
 
             
-            $postnestedData['user_id'] = $post_val->user_id;
+            $postnestedData['user_id'] = editButton($post_val->user_id);
             $postnestedData['username'] = $post_val->username;
             $postnestedData['summary'] = check($post_val->summary, 'summary');
             $postnestedData['view_list'] = check($post_val->view_list, 'view_list');
